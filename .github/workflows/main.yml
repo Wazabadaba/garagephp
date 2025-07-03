@@ -1,0 +1,29 @@
+name: CI garagephp
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Configuration PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3' # La version de PHP utilisée
+          extensions: pdo_mysql, mbstring # Ajouter les extensions nécessaires
+          tools: composer # Installe Composer
+
+      - name: Installation des dépendances de Composer
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Exécution des tests PHPUnit
+        run: vendor/bin/phpunit # S'assurer que PHPUnit est configuré
